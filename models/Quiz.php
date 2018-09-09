@@ -335,17 +335,18 @@
 
         public function updateQuizPart(){
 
-            //NILAGAY KO NALANG NA WHERE IS YUNG PART_ID KASI UNIQUE NAMAN SYA
             $updateQuery = " UPDATE quiz_parts 
                              SET part_title= :new_part_title,
-                                 type_id= :new_type_id 
+                                 type_id= :new_type_id ,
+                                 duration = :duration
                              WHERE part_id = :part_id";
-            //PREPARE STATEMENT
+
             $stmt = $this->conn->prepare($updateQuery);
-            //BINDING OF PARAMETERS
+            
             $stmt->bindParam(':new_part_title', $this->new_part_title);
-            $stmt->bindParam(':new_type_id', $this->new_type_id);
+            $stmt->bindParam(':new_type_id',  $this->type_id );
             $stmt->bindParam(':part_id', $this->part_id);
+            $stmt->bindParam(':duration', $this->duration);
 
             //TESTING
             if ($stmt->execute()) {
@@ -471,13 +472,19 @@
         $query = "SELECT q.quiz_id, pr.part_id, pr.part_title, pr.duration, qt.type FROM quiz_parts pr 
         INNER JOIN quizzes q ON q.quiz_id = pr.quiz_id
         INNER JOIN question_types qt ON qt.type_id = pr.type_id
-        WHERE q.quiz_id = $this->quizID";
+        WHERE q.quiz_id = $this->quizID ORDER BY pr.position ASC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function singlePart(){
+        $query = "SELECT pr.part_title, pr.duration, ty.type 
+        FROM quiz_parts pr INNER JOIN question_types ty ON pr.type_id = ty.type_id
+        WHERE pr.part_id = $this->part_id";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
     }
         
-    }
-
-
-
+}

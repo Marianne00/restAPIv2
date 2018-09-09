@@ -23,18 +23,18 @@
  	// VALIDATION
 
     if ($errorCont->checkField($data->new_part_title, "New Part Title" , 0, 200)) {
-        if ($errorCont->checkField($data->new_type_id, "Type Id" , 0 , 2)) {
-             if($errorCont->checkHaveSpecialChar($data->new_part_title, "New Part Title")){
-                if($errorCont->numbersOnly($data->new_type_id , "Type Id")){
-                    $quiz->new_part_title = $data->new_part_title ;
-                    $quiz->new_type_id = $data->new_type_id ; 
-                    $quiz->part_id = $data->part_id ;
-
-                    if( $quiz->updateQuizPart() ){
-                        echo json_encode(array('message' => 'Quiz Part updated successfully.') );
-                    }else{
-                        echo json_encode(array('message' => 'Quiz Part updating failed.') );
-                    }
+        if ($errorCont->checkField($data->type_name, "Type Name" , 0 , 30)) {
+            if($errorCont->checkField($data->duration, "Duration", 0, 100)){
+                $quiz->new_part_title = $data->new_part_title ;
+                $quiz->type_name = $data->type_name; 
+                $quiz->getTypeID();
+                $quiz->duration = $data->duration;
+                $quiz->part_id = $data->part_id ;
+    
+                if( $quiz->updateQuizPart() ){
+                    echo json_encode(array('success' => 'Quiz Part updated successfully.') );
+                }else{
+                    echo json_encode(array('message' => 'Quiz Part updating failed.') );
                 }
             }
         }

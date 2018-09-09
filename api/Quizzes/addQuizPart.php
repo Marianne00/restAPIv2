@@ -31,6 +31,7 @@
                         $quizzes->getTypeID();
 
                         //Create
+                        $quizzes->countParts();
                         $quizzes->totalParts += 1;
                         if ($quizzes->addQuizPart()){
 
