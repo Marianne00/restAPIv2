@@ -16,6 +16,7 @@
         public $date_created;
         public $kunware_session;
         public $description;
+        public $filepath;
         
         //Quiz Part Properties
         public $type_id;
@@ -51,7 +52,8 @@
                             SET
                               quiz_title = :quizTitle,
                               admin_id = :admin_id,
-                              description = :description
+                              description = :description,
+                              filepath = :filepath
                               ";
 
             $stmt = $this->conn->prepare($insertQuery);
@@ -59,13 +61,18 @@
             $this->quizTitle = htmlspecialchars(strip_tags($this->quizTitle));
             $this->description = htmlspecialchars(strip_tags($this->description));
             $this->admin_id = htmlspecialchars(strip_tags($this->admin_id));
+            $this->filepath = htmlspecialchars(strip_tags($this->filepath));
 
             // Bind parameters
+
+            if($this->filepath == ''){
+                $this->filepath = "../../../AdmInterface/uploads/quiz/default.jpeg";
+            }
             $stmt->bindParam(':quizTitle', $this->quizTitle);
             $stmt->bindParam(':description', $this->description);
             $stmt->bindParam(':admin_id', $this->admin_id);
+            $stmt->bindParam(':filepath', $this->filepath);
             
-  
             if ($stmt->execute()) {
                 return true;
             } else {
@@ -81,14 +88,15 @@
             $query = "SELECT 
             a.quiz_id,
             a.quiz_title,
-            a.date_created, 
+            a.date_created,
+            a.filepath,
             b.fname 
             FROM 
             quizzes a left join admins b 
             on a.quiz_id = b.admin_id
             WHERE a.admin_id = $this->admin_id
-                ORDER BY
-                    a.quiz_id ASC";
+                ORDER BY 
+                    a.quiz_id DESC";
             
             //Prepare Statement
             $stmt = $this->conn->prepare($query);

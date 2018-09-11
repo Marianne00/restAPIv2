@@ -1,7 +1,6 @@
 <?php
     // Headers
     header('Access-Control-Allow-Origin: *');
-    header('Content-Type: application/json');
     header('Access-Control-Allow-Methods: POST');
     header('Access-Control-Allow-Headers: Access-Control-Allow-Methods, Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
@@ -19,16 +18,21 @@
     // Get Raw Data
     $data = json_decode(file_get_contents('php://input'));
 
-     if($errorCont->checkField($data->quizTitle, 'Quiz Title', 0, 251)){
-        if($errorCont->checkField($data->description, 'Quiz Description', 0, 251)){
-
-                $quiz->quizTitle = $data->quizTitle;
-                $quiz->description = $data->description;
-                $quiz->admin_id = $data->admin_id;
-
-                // Create
+     if($errorCont->checkField($_POST['quizTitle'], 'Quiz Title', 10, 251)){
+        if($errorCont->checkField($_POST['description'], 'Quiz Description', 10, 251)){
+            if(isset($_FILES['file']['tmp_name'])) {
+                $filepath = '../../../AdmInterface/uploads/quiz/'.$_FILES['file']['name'];
+                $quiz->filepath = $filepath;
+            }
+                $quiz->quizTitle = $_POST['quizTitle'];
+                $quiz->description =  $_POST['description'];
+                $quiz->admin_id = $_POST['admin_id'];
+                
                 if ($quiz->addQuiz()) {
                     echo json_encode(array('success' => 'Quiz created successfully!'));
+                    if(isset($_FILES['file']['tmp_name'])) {
+                        move_uploaded_file($_FILES['file']['tmp_name'], $filepath);
+                    }
                 } else {
                     echo json_encode(array('error' => 'Failed to create quiz!'));
                 }

@@ -30,7 +30,7 @@
                 'quizID' => $quiz_id,
                 'quizTitle' => $quiz_title,
                 'date_created' => $date_created, 
-                'quizAdmin' => $fname
+                'filepath' => $filepath
             );
         
             //Push to data array 
