@@ -28,6 +28,7 @@
             extract($row);
             $quiz_item = array(
                 'QuizID' => $quiz_id,
+                'TypeID' => $type_id,
                 'PartID' => $part_id,
                 'PartTitle' => $part_title,
                 'Duration' => $duration,

@@ -469,7 +469,7 @@
     }
 
     public function viewQuizParts() {
-        $query = "SELECT q.quiz_id, pr.part_id, pr.part_title, pr.duration, qt.type FROM quiz_parts pr 
+        $query = "SELECT q.quiz_id, qt.type_id, pr.part_id, pr.part_title, pr.duration, qt.type FROM quiz_parts pr 
         INNER JOIN quizzes q ON q.quiz_id = pr.quiz_id
         INNER JOIN question_types qt ON qt.type_id = pr.type_id
         WHERE q.quiz_id = $this->quizID ORDER BY pr.position ASC";
